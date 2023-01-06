@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atoof <atoof@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/29 17:22:37 by atoof             #+#    #+#             */
-/*   Updated: 2023/01/06 14:38:10 by atoof            ###   ########.fr       */
+/*   Created: 2023/01/06 14:57:30 by atoof             #+#    #+#             */
+/*   Updated: 2023/01/06 15:09:27 by atoof            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /* this function gets the remainder from
 the last time get_next_line was called if it exists */
@@ -107,15 +107,15 @@ static char	*ft_read_and_store(int fd, char *cached_str)
 
 char	*get_next_line(int fd)
 {
-	static char	*cached_str;
+	static char	*cached_str[OPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
 		return (NULL);
-	cached_str = ft_read_and_store(fd, cached_str);
-	if (!cached_str)
+	cached_str[fd] = ft_read_and_store(fd, cached_str[fd]);
+	if (!cached_str[fd])
 		return (NULL);
-	line = ft_get_line(cached_str);
-	cached_str = ft_new_line(cached_str);
+	line = ft_get_line(cached_str[fd]);
+	cached_str[fd] = ft_new_line(cached_str[fd]);
 	return (line);
 }
